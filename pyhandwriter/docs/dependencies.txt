@@ -1,0 +1,10 @@
+Non standard libraries
+======================
+Essential
+  	pygame
+
+Optional
+	pillow (PIL)
+	matplotlib
+	Without these, latex equations will not be rendered, but no errors will be raised.
+	Note: equations also require a Latex installation on pc
