@@ -52,7 +52,7 @@ def main():
     # Page 1------------------------------------------------------------------
     page = {}
     page["text"] = (
-        r"\bigger{\bigger{\bold{\teel{handwriter. py} for \yellow{pygame}}}}"
+        r"\bigger{\bigger{\bold{\blue{handwriter. py} for \yellow{pygame}}}}"
         r"\n\nHello and welome !"
         r"\n\nI thought it would be fun, and maybe even useful, to write some code"
         r'that animates handwriting in pygame.\n\nThere are a few built in " fonts "'
