@@ -36,13 +36,13 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("Show fonts & symbols demo")
 
 # 1. Using default text
-# selected = ph.show_pygame_fonts(screen)
+selected = ph.show_pygame_fonts(screen)
 
 # 2. Customise the displayed text for each font
 # selected = ph.show_hw_fonts(screen, text="Hellow world 123")
 
 # 3. Show symbols (built-ins and user recorded)
-selected = ph.show_hw_symbols(screen)
+# selected = ph.show_hw_symbols(screen)
 
 print(selected)
 
