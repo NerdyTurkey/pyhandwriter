@@ -5,9 +5,17 @@ Created on Sat Oct 17 18:28:38 2020
 @author: jt
 """
 
-# Pygame Colour Selector
+# Pygame Colour Selector - get names of pygame built in colours.
 
-# Use mouse to select one or more colours you want.
+# All the common colours have obvious names, like "blue", "red" etc
+# But there is a huge range of other colours with more cryptic names.
+
+# These colour names can be used to colour your handwriting
+# text = r"\colour_name{Hello world}"
+# e.g. text = r"\aquarmarine3{Hello World}"
+# e.g. text = r"\maroon1{Hello World}"
+
+# Use the mouse to select one or more colours you want.
 # When you quit (Esc or close window), the selected pygame colour names will be
 # displayed in the order they were selected.
 

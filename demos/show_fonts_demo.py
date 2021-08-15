@@ -5,11 +5,20 @@ Created on Sat Oct 17 18:28:38 2020
 @author: jt
 """
 
-# Pygame Font Selector
+# Pygame Font Selector - get names of built in pygame fonts.
+
+# Useful to specify a font to trace when recording your own font
+# using the Recorder method.
+
+# e.g.
+# import pyhandwriter as ph
+# ...
+# recorder = pg.Recorder(screen, "my_gigi", prompt_font="gigi")
+# recoder.record()
 
 # Use mouse to select one or more fonts you want.
 # When you quit (Esc or close window), the selected pygame font names will be
-#  displayed in the order they were selected.
+# displayed in the order they were selected.
 
 # Further inturctions at bottom of pygame screen
 
