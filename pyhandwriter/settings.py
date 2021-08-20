@@ -15,7 +15,7 @@ INTERRUPT_ESC_CHARS = ("p", "w")
 
 ESC_CHARS = list(FORMATTING_ESC_CHARS) + list(INTERRUPT_ESC_CHARS)
 
-#TODO these should not be called escape chars since no preceding \ required
+# TODO these should not be called escape chars since no preceding \ required
 # Rename to LATEX_INSERT_CHARS and SYMBOL_INSERT_CHARS??
 LATEX_ESC_CHARS = ("$", "£")
 
@@ -101,7 +101,7 @@ PROPS_REC = {
     "prompt_title_text": "prompt mode",
     "title_offset": (0, 20),
     "prompt_font": "segoescript",
-    "pt_size": 300,  # 200
+    "pt_size": 200,  # 200
     "save_pt_size": 20,
     "save_as_prompt": "Enter filename : ",
     "msg_pt_size": 24,
@@ -118,16 +118,16 @@ PROPS_REC = {
     "bg_col": col("BLACK"),
     "replay_offset": 200,
     "replay_col": col("GREEN"),
-    "replay_scale": 15, # pt_size/save_pt_size
+    "replay_scale": 10,  # pt_size/save_pt_size
     "replay_speed_mult": 1,
     "replay_linewidth": 5,
     "sample_col": col("WHITE"),
     "prompt_horiz_offset": 50,
     "box_col": col("WHITE"),
-    "trace_col": col("BLUE"),
+    "trace_col": col("PURPLE"),
     "trace_linewidth": 5,
     "ruler_col": col("DARKGRAY"),
-    "cursor_col": col("PINK"),
+    "cursor_col": col("PURPLE"),
     "cursor_radius": 5,
     "cursor_linewidth": 0,  # 0 = filled in cursor
     "text_input_font": "consolas",

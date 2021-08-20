@@ -36,7 +36,7 @@ class Recorder:
     """
     Class to record your handwriting.
     """
-    
+
     def __init__(self, screen, fps=None):
         """ 
         screen is current pygame display surface
@@ -56,7 +56,6 @@ class Recorder:
         self.sox = self.screen_width // 2 - s.PROPS_REC["box_horiz_offset"]
         self.soy = self.screen_height // 2 + s.PROPS_REC["box_vert_offset"]
         self.clock = pg.time.Clock()
-        
 
     def _reset(self):
         """
@@ -80,8 +79,7 @@ class Recorder:
         self.smooth_value = s.PROPS_REC["smooth_levels"][self.smooth_level]
         self.bsx = BufferSmooth(self.smooth_value)
         self.bsy = BufferSmooth(self.smooth_value)
-        
-        
+
     def record_font(self, hw_font_save_fname, prompt_font=None, chars=None):
         """ 
         Method to make you own handwritten font.
@@ -163,7 +161,6 @@ class Recorder:
         self.help_text_line1 = s.PROPS_REC["record_font_help_text_line1"]
         self._record_loop()
 
-            
     def record_symbols(self):
         """
         Method to make you own custom handwritten symbols.
@@ -199,15 +196,16 @@ class Recorder:
     
         """
         self.record_type = SYMBOLS
+        self.font = s.PROPS_REC["prompt_font"]
         self.hw_symbol_fname_root = os.path.join(
             self.hw_symbol_save_path, s.PROPS_GEN["hw_symbol_fname"]
-        )    
+        )
         self._reset()
         self.title_text = s.PROPS_REC["record_symbols_title_text"]
         self.help_text_line0 = s.PROPS_REC["record_symbols_help_text_line0"]
         self.help_text_line1 = s.PROPS_REC["record_symbols_help_text_line1"]
         self._record_loop()
-        
+
     def _start_recording(self):
         self.start_time = pg.time.get_ticks()
         self.recording = True
@@ -345,7 +343,7 @@ class Recorder:
                     self._process_font_recorder_events(e.key)
                 elif self.record_type == SYMBOLS:
                     self._process_symbols_recorder_events(e.key)
-    
+
     def _process_common_events(self, key):
         if key == pg.K_ESCAPE:
             self.running = False
@@ -367,8 +365,8 @@ class Recorder:
         if key == pg.K_DELETE:
             self._reset_smoothing()
             self._delete()
-            return    
-    
+            return
+
     def _process_font_recorder_events(self, key):
         if key == pg.K_n:
             self._reset_smoothing()
@@ -401,7 +399,7 @@ class Recorder:
             self._save_as()
             self._next_char()
             return
-    
+
     def _record(self):
         if self.recording:
             self.now = pg.time.get_ticks()
@@ -432,11 +430,14 @@ class Recorder:
             pt_size=s.PROPS_REC["title_pt_size"],
         )
 
-        
     def _char_and_box(self):
         # ox,oy is char "origin" i.e. where char sits on line
+        if self.record_type == FONT:
+            text = self.chars[self.i]
+        elif self.record_type == SYMBOLS:
+            text = "M"  # large symbol to give max sized box
         text_surf, (ox, oy) = tu.get_text_surface(
-            text=self.chars[self.i],
+            text=text,
             text_size=self.pt_size,
             text_font_name=self.font,
             text_col=s.PROPS_REC["sample_col"],
