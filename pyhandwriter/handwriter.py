@@ -24,7 +24,8 @@ class HandWriter:
         screen as the surface to be written on, and so this requires 
         pg.display.update() calls in this code after blits to show those 
         blits.
-    text_box_rect: (x,y, w, h) or equivalent pygame rect specifying the 
+    
+    text_rect: (x,y, w, h) or equivalent pygame rect specifying the 
     bounding rect for the written text **RELATIVE** to the passed surf.
         
     colour: int tuple (r,g,b,a)

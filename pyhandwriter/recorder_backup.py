@@ -15,9 +15,6 @@ from .buffer_smooth import BufferSmooth
 
 vec = pg.math.Vector2
 
-FONT = "FONT"
-SYMBOLS = "SYMBOLS"
-
 
 def key_val(char):
     """
@@ -34,35 +31,114 @@ def key_val(char):
 
 class Recorder:
     """
-    Class to record your handwriting.
+    Class to record your handwriting to make you own handwritten font.
+
+    You can choose a font and then work your way through the character set
+    either tracing each char or doing your owvn version.
+
+    Each recorded character is saved as a separate path file.
+
+    These can be loaded up when you instantiate a HandWriter object.
+
+    Instructions:
+    =============
+    Use mouse (or pen/stylus) to draw the current character in the box.
+    Your strokes are recorded when you hold the left mouse button down.
+    You can release  mouse button to move to the start of next stroke.
+
+    Keys:
+
+    Del to delete your current attempt.
+
+    'N' to move to next character
+
+    'P' to go back to previous character
+
+    'S' to save (you can overwrite previous attempts)
+         the path file will be linked to the current prompt character
+         the path file has the following format:
+             <your_font_name> + str(unicode of promptcharacter) + '.pth'
+             e.g. if your font_name is 'my_font' and the prompt char is 'a'
+             the path file will be 'my_font97.pth'
+             When you use handwriter with 'my_font', all 'a's will be rendered
+             with your handwritten version.
+
+    'A' to save as
+        You can handwrite anything - there is no checking against the prompt or
+        trace char for accuracy!
+        So if you want to create a custom symbol, use the "Save As" option to
+        save it to a path file of your choosing.
+        e.g. if you want to make the Greek symbol alpha, then draw an alpha
+        (ignore the prompt char) and then press 'A' to save as. You will be
+        prompted for a filename. Enter "alpha" and the path file will be saved
+        to a folder containing custom symbols. You can use these custom symbols
+        in any handwritten font by embedding the symbol name into the text to
+        be written using backticks (like markdown)
+        e.g. r'The first letter of the Greek alphabet is `alpha`'
+
+    Return to preview your current handwritten character
+
+    Esc (or close window) to quit.
+
+    Note: if you skip some chars, then default handwritten characters will be
+    rendered for the missing chars when you use your font.
+
+    Params:
+    ------
+    screen: pygame surface
+    The current display surface
+
+    save_fname: string
+    The root fname for saving your handwritten characters
+
+    path: string
+    The folder pathname to save font; if omitted default folder is used.
+
+    prompt_font: pygame font or fontname
+    Font for tracing or prompting
+
+    fps: int
+    Frames per second. Larger values increase sampling rate of your
+    handwritten character.
+
+    chars: list of chars
+    The recording list of chars.
+    The default is COMMON_CHARS which is the lower case letters, the upper case
+    letters, the digits and most common punctuation and other symbols.
+    Your can use your own list.
+
+    Returns
+    ------
+    None
+
     """
-    
-    def __init__(self, screen, fps=None):
-        """ 
-        screen is current pygame display surface
-        fps is frames per second; controls sampling rate of handwitten path
-        """
+
+    def __init__(
+        self, screen, hw_font_save_fname, prompt_font=None, fps=None, chars=None
+    ):
         self.screen = screen
         self.screen_width, self.screen_height = screen.get_size()
-        self.fps = fps or s.PROPS_REC["fps"]
         self.hw_font_save_path = os.path.join(
             os.path.dirname(__file__), s.PROPS_GEN["hw_font_folder"]
         )
         self.hw_symbol_save_path = os.path.join(
             os.path.dirname(__file__), s.PROPS_GEN["hw_symbol_folder"]
         )
+        self.hw_font_fname_root = os.path.join(
+            self.hw_font_save_path, hw_font_save_fname
+        )
+        self.hw_symbol_fname_root = os.path.join(
+            self.hw_symbol_save_path, s.PROPS_GEN["hw_symbol_fname"]
+        )
+        self.font = s.PROPS_REC["prompt_font"] if prompt_font is None else prompt_font
         self.pt_size = s.PROPS_REC["pt_size"]
         self.SF = s.PROPS_REC["save_pt_size"] / self.pt_size
+        self.chars = s.COMMON_CHARS if chars is None else chars
+        self.fps = fps or s.PROPS_REC["fps"]
+        # screen coords to anchor text origin
         self.sox = self.screen_width // 2 - s.PROPS_REC["box_horiz_offset"]
         self.soy = self.screen_height // 2 + s.PROPS_REC["box_vert_offset"]
         self.clock = pg.time.Clock()
-        
-
-    def _reset(self):
-        """
-        Common to both record_font and record_symbols methods
-        """
-        # screen coords to anchor text origin
         self.current_path = []
         self.current_path_smoothed = []
         self.all_paths = []
@@ -76,138 +152,12 @@ class Recorder:
         self.show_box = True
         # If self.trace, the characters are displayed inside the writing box for
         # tracing. Else they are displayed to the side as a prompt
+        self.trace = True
         self.smooth_level = s.PROPS_REC["default_smooth_level"]
         self.smooth_value = s.PROPS_REC["smooth_levels"][self.smooth_level]
         self.bsx = BufferSmooth(self.smooth_value)
         self.bsy = BufferSmooth(self.smooth_value)
-        
-        
-    def record_font(self, hw_font_save_fname, prompt_font=None, chars=None):
-        """ 
-        Method to make you own handwritten font.
-        
-        When animating your font, the ord() values of the ASCII chars you want
-        handwritten will be used to look up the coresponding "paths" you have recoded here.
 
-        You can choose a font and then work your way through the character set
-        either tracing each char or doing your owvn version with the char displayed
-        as a prompt.
-    
-        Each recorded character is saved as a separate "path" file.
-    
-        These can be loaded up when you instantiate a HandWriter object.
-    
-        Instructions:
-        =============
-        Use mouse (or pen/stylus) to draw the current character in the box.
-        Your strokes are recorded when you hold the left mouse button down.
-        You can release  mouse button to move to the start of next stroke.
-    
-        Keys:
-    
-        ALT to toggle between trace and prompt mode
-
-        Del to delete your current attempt.
-        
-        1-9 to change smoothing level (1=least smoothing, 9=most smoothing)
-    
-        Space to preview your current handwritten character
-
-        'N' to move to next character
-    
-        'P' to go back to previous character
-    
-        'S' to save (you can overwrite previous attempts)
-             the path file has the following format:
-                <your_font_name> + '#' + str(unicode of promptcharacter) + '.pth'
-                e.g. if your font_name is 'my_font' and the prompt char is 'a'
-                the path file will be 'my_font#97.pth'
-                When you use handwriter with 'my_font', all 'a's will be rendered
-                with your handwritten version.
-
-        Esc (or close window) to quit.
-    
-        Note: if you skip some chars, then default handwritten characters will be
-        rendered for the missing chars when you use your font.
-    
-        Params:
-        ------
-        
-        hw_font_save_fname: string
-        The root fname for saving your handwritten characters
-    
-        prompt_font: pygame font or fontname
-        Font for tracing or prompting
-    
-        chars: list of chars
-        The recording list of chars.
-        The default is COMMON_CHARS which is the lower case letters, the upper case
-        letters, the digits and most common punctuation and other symbols.
-        Your can use your own list.
-    
-        Returns
-        ------
-        None
-    
-        """
-        self.record_type = FONT
-        self.trace = True
-        self.hw_font_fname_root = os.path.join(
-            self.hw_font_save_path, hw_font_save_fname
-        )
-        self.font = s.PROPS_REC["prompt_font"] if prompt_font is None else prompt_font
-        self.chars = s.COMMON_CHARS if chars is None else chars
-        self._reset()
-        self.title_text = s.PROPS_REC["record_font_title_text"]
-        self.help_text_line0 = s.PROPS_REC["record_font_help_text_line0"]
-        self.help_text_line1 = s.PROPS_REC["record_font_help_text_line1"]
-        self._record_loop()
-
-            
-    def record_symbols(self):
-        """
-        Method to make you own custom handwritten symbols.
-        
-        Each recorded symbol is saved as a separate "path" file.
-
-        These are saved differently to chars in a font.
-        
-        Since, in general, they will not correspond to typable ASCII chars,
-        you save your symbols with a name, e.g. "alpha" for the Greek alpha
-        symbol, or "heart" for a heart symbol.
-        
-        To handwrite these symbols later, you use use the name in backticks, like 
-        in markup, 
-        eg. "The first letter of the greek alphabet is  `alpha`"
-        
-    
-        Instructions:
-        =============
-        Use mouse (or pen/stylus) to draw the current character in the box.
-        Your strokes are recorded when you hold the left mouse button down.
-        You can release  mouse button to move to the start of next stroke.
-    
-        Keys:
-    
-        1-9 to change smoothing level (1=least smoothing, 9=most smoothing)
-        
-        Del to delete your current attempt.
-    
-        Space to preview your current handwritten character
-
-        'S' to save your symbol. You will b prompted for a filename. 
-    
-        """
-        self.record_type = SYMBOLS
-        self.hw_symbol_fname_root = os.path.join(
-            self.hw_symbol_save_path, s.PROPS_GEN["hw_symbol_fname"]
-        )    
-        self._reset()
-        self.title_text = s.PROPS_REC["record_symbols_title_text"]
-        self.help_text_line0 = s.PROPS_REC["record_symbols_help_text_line0"]
-        self.help_text_line1 = s.PROPS_REC["record_symbols_help_text_line1"]
-        self._record_loop()
-        
     def _start_recording(self):
         self.start_time = pg.time.get_ticks()
         self.recording = True
@@ -340,68 +290,47 @@ class Recorder:
             if e.type == pg.QUIT:
                 self.running = False
             elif e.type == pg.KEYUP:
-                self._process_common_events(e.key)
-                if self.record_type == FONT:
-                    self._process_font_recorder_events(e.key)
-                elif self.record_type == SYMBOLS:
-                    self._process_symbols_recorder_events(e.key)
-    
-    def _process_common_events(self, key):
-        if key == pg.K_ESCAPE:
-            self.running = False
-            return
-        try:
-            key_num = int(pg.key.name(key))
-        except ValueError:
-            key_num = None
-        if key_num in s.PROPS_REC["smooth_levels"]:
-            self.smooth_level = key_num
-            self.smooth_value = s.PROPS_REC["smooth_levels"][key_num]
-            self._reset_smoothing(self.smooth_value)
-            print(self.smooth_value)  # debug
-            return
-        if key == pg.K_SPACE:
-            self._reset_smoothing()
-            self._handwrite_it()
-            return
-        if key == pg.K_DELETE:
-            self._reset_smoothing()
-            self._delete()
-            return    
-    
-    def _process_font_recorder_events(self, key):
-        if key == pg.K_n:
-            self._reset_smoothing()
-            self._next_char()
-            return
-        if key == pg.K_p:
-            self._reset_smoothing()
-            self._previous_char()
-            return
-        if key == pg.K_s:
-            self._reset_smoothing()
-            self._save(
-                self.hw_font_fname_root
-                + s.PROPS_GEN["fname_separator"]
-                + str(key_val(self.chars[self.i]))
-                + ".pth"
-            )
-            self._next_char()
-            return
-        if key in [pg.K_RALT, pg.K_LALT]:
-            self.trace = not self.trace
-            return
-        if key == pg.K_b:
-            self.show_box = not self.show_box
-            return
+                if e.key == pg.K_ESCAPE:
+                    self.running = False
+                try:
+                    key_num = int(pg.key.name(e.key))
+                except ValueError:
+                    key_num = None
+                if key_num in s.PROPS_REC["smooth_levels"]:
+                    self.smooth_level = key_num
+                    self.smooth_value = s.PROPS_REC["smooth_levels"][key_num]
+                    self._reset_smoothing(self.smooth_value)
+                    print(self.smooth_value)  # debug
+                elif e.key == pg.K_n:
+                    self._reset_smoothing()
+                    self._next_char()
+                elif e.key == pg.K_p:
+                    self._reset_smoothing()
+                    self._previous_char()
+                elif e.key == pg.K_SPACE:
+                    self._reset_smoothing()
+                    self._handwrite_it()
+                elif e.key == pg.K_DELETE:
+                    self._reset_smoothing()
+                    self._delete()
+                elif e.key == pg.K_s:
+                    self._reset_smoothing()
+                    self._save(
+                        self.hw_font_fname_root
+                        + s.PROPS_GEN["fname_separator"]
+                        + str(key_val(self.chars[self.i]))
+                        + ".pth"
+                    )
+                    self._next_char()
+                elif e.key == pg.K_a:
+                    self._reset_smoothing()
+                    self._save_as()
+                    self._next_char()
+                elif e.key in [pg.K_RALT, pg.K_LALT]:
+                    self.trace = not self.trace
+                elif e.key == pg.K_b:
+                    self.show_box = not self.show_box
 
-    def _process_symbols_recorder_events(self, key):
-        if key == pg.K_s:
-            self._reset_smoothing()
-            self._save_as()
-            self._next_char()
-            return
-    
     def _record(self):
         if self.recording:
             self.now = pg.time.get_ticks()
@@ -417,14 +346,12 @@ class Recorder:
             )
 
     def _title(self):
-        suffix = ""
-        if self.record_type == FONT:
-            if self.trace:
-                suffix = " : " + s.PROPS_REC["trace_title_text"]
-            else:
-                suffix = " : " + s.PROPS_REC["prompt_title_text"]
+        if self.trace:
+            self.title_text = s.PROPS_REC["trace_title_text"]
+        else:
+            self.title_text = s.PROPS_REC["prompt_title_text"]
         tu.blit_text(
-            self.title_text + suffix,
+            self.title_text,
             self.screen,
             offset=s.PROPS_REC["title_offset"],
             text_handle="midtop",
@@ -432,7 +359,6 @@ class Recorder:
             pt_size=s.PROPS_REC["title_pt_size"],
         )
 
-        
     def _char_and_box(self):
         # ox,oy is char "origin" i.e. where char sits on line
         text_surf, (ox, oy) = tu.get_text_surface(
@@ -447,13 +373,12 @@ class Recorder:
         box_rect = text_surf.get_rect()
         box_rect.topleft = self.sox - ox, self.soy - oy
         char_rect = pg.Rect(box_rect)
-        if self.record_type == FONT:
-            if not self.trace:
-                # prompt mode, char is to the left of box
-                char_rect.right = char_rect.left - s.PROPS_REC["prompt_horiz_offset"]
-            if self.show_char:
-                # blit char
-                self.screen.blit(text_surf, char_rect)
+        if not self.trace:
+            # prompt mode, char is to the left of box
+            char_rect.right = char_rect.left - s.PROPS_REC["prompt_horiz_offset"]
+        if self.show_char:
+            # blit char
+            self.screen.blit(text_surf, char_rect)
         if self.show_box:
             # draw box
             pg.draw.rect(self.screen, s.PROPS_REC["box_col"], box_rect, 1)
@@ -499,7 +424,7 @@ class Recorder:
 
     def _help(self):
         tu.blit_text(
-            self.help_text_line0,
+            s.PROPS_REC["help_text0"],
             self.screen,
             offset=s.PROPS_REC["help_offset0"],
             text_handle="midbottom",
@@ -507,7 +432,7 @@ class Recorder:
             pt_size=s.PROPS_REC["help_pt_size"],
         )
         tu.blit_text(
-            self.help_text_line1,
+            s.PROPS_REC["help_text1"],
             self.screen,
             offset=s.PROPS_REC["help_offset1"],
             text_handle="midbottom",
@@ -596,7 +521,7 @@ class Recorder:
                 x_max = next_pt[0]
         return x_max
 
-    def _record_loop(self):
+    def record(self):
         while self.running:
             self._process_events()
             self.screen.fill(s.PROPS_REC["bg_col"])

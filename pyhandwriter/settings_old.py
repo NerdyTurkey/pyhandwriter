@@ -89,19 +89,16 @@ PROPS_GEN = {
     "update_display": True,
 }
 
+
 # properties for recorder.py
 PROPS_REC = {
-    "record_font_help_text_line0": "Left-Mouse-Button hold=record, 0-9=smooth level, Del=delete, Space=preview",
-    "record_font_help_text_line1": "S=save, N=next, P=previous, Alt=toggle trace/prompt, Esc/close window=Quit",
-    "record_symbols_help_text_line0": "Left-Mouse-Button hold=record, 0-9=smooth level, Del=delete, Space=preview",
-    "record_symbols_help_text_line1": "S=save, Esc/close window=Quit",
-    "record_font_title_text": "pyhandwriter record font",
-    "record_symbols_title_text": "pyhandwriter record symbols",
-    "trace_title_text": "trace mode",
-    "prompt_title_text": "prompt mode",
+    "help_text0": "LMB hold=record, 0-9=smooth level, S=Save, A=Save As, N=Next, P=Previous, Del=delete",
+    "help_text1": "Space=preview, Alt=toggle trace/prompt, B=toggle Box on/noff, Esc/close window=Quit",
+    "trace_title_text": "RECORDING: TRACE CHARACTER IN BOX",
+    "prompt_title_text": "RECORDING: WRITE PROMPT CHARACTER IN BOX",
     "title_offset": (0, 20),
     "prompt_font": "segoescript",
-    "pt_size": 300,  # 200
+    "pt_size": 200,  # 200
     "save_pt_size": 20,
     "save_as_prompt": "Enter filename : ",
     "msg_pt_size": 24,
@@ -118,7 +115,7 @@ PROPS_REC = {
     "bg_col": col("BLACK"),
     "replay_offset": 200,
     "replay_col": col("GREEN"),
-    "replay_scale": 15, # pt_size/save_pt_size
+    "replay_scale": 10,
     "replay_speed_mult": 1,
     "replay_linewidth": 5,
     "sample_col": col("WHITE"),

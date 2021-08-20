@@ -1300,8 +1300,8 @@ class HandWriterGen:
             )
             self.surf.blit(temp_surf, (0, 0))
         if text_rect_bg_col is not None:
-            temp_surf = pg.Surface(self.surf.get_size(), pg.SRCALPHA)
-            temp_surf.fill(text_rect_bg_col, self.props.rect)
+            temp_surf = pg.Surface(self.props.rect.size, pg.SRCALPHA)
+            temp_surf.fill(text_rect_bg_col)
             self.surf.blit(temp_surf, self.props.origin_pos)
         if text_rect_border_width is not None and text_rect_border_col is not None:
             temp_surf = pg.Surface(self.surf.get_size(), pg.SRCALPHA)
