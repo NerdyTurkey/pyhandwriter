@@ -218,12 +218,16 @@ class Recorder:
     def _next_char(self):
         self.current_path = []
         self.all_paths = []
+        if self.record_type == SYMBOLS:
+            return
         self.i += 1
-        self.i %= len(self.chars)  # warp around
+        self.i %= len(self.chars)  # wrap around
 
     def _previous_char(self):
         self.current_path = []
         self.all_paths = []
+        if self.record_type == SYMBOLS:
+            return
         self.i -= 1
         self.i %= len(self.chars)
 

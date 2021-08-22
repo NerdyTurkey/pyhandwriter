@@ -18,7 +18,6 @@ sys.path.insert(0, str(path))
 import pygame as pg
 import pyhandwriter as ph
 
-colours = ph.col
 
 # screen dimensions
 WIDTH = 1440
@@ -32,7 +31,7 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("demo3.py")
 
 
-hw = ph.HandWriter(screen)
+hw = ph.HandWriter(screen, hw_font="my_gigi")
 
 # note use of built in \n and \t for newline and tab
 text = (

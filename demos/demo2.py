@@ -19,9 +19,7 @@ import pygame as pg
 import pyhandwriter as ph
 
 # screen dimensions
-WIDTH = 900
-HEIGHT = 600
-
+WIDTH, HEIGHT = 900, 600
 
 pg.init()
 os.environ["SDL_VIDEO_CENTERED"] = "1"

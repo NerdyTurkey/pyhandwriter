@@ -46,7 +46,7 @@ def line_blit(surf, p1, p2, img, mult=1):
     line_vector = p2 - p1
     length = line_vector.length()
     if length == 0:
-        print("zero length line!")
+        # print("zero length line!")
         return
     unit_vector = line_vector / length
     num_blits = 1 + int(mult * fudge_factor * length / mean_size)
