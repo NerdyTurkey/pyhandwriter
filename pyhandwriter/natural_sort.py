@@ -2,7 +2,7 @@
 """
 Created on Wed Feb 10 08:45:25 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 # For sorting strings containing numbers in natural order

@@ -2,7 +2,7 @@
 """
 Created on Wed Feb 10 11:39:34 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 import time

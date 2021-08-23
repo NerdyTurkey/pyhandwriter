@@ -2,7 +2,7 @@
 """
 Created on Sat Feb 13 17:14:45 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 from bisect import bisect_left
 

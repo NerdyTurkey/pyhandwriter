@@ -2,7 +2,7 @@
 """
 Created on Sat Oct 24 15:21:45 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 

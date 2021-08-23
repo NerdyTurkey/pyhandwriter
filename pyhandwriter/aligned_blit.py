@@ -2,7 +2,7 @@
 """
 Created on Thu Feb  4 14:56:07 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 from sys import exit

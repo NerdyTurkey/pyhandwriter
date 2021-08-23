@@ -2,7 +2,7 @@
 """
 Created on Sat Oct 17 07:07:32 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 from .colours import col_dict
 

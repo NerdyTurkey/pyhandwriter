@@ -2,7 +2,7 @@
 """
 Created on Sun Oct 18 18:18:49 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 def parse(string, tokens, open_brack=None, close_brack=None):

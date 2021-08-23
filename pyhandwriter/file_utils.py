@@ -2,7 +2,7 @@
 """
 Created on Tue Oct  6 10:44:23 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 # For consistency, when in other scripts

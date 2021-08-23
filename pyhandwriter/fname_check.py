@@ -2,7 +2,7 @@
 """
 Created on Wed Feb  3 08:33:40 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 # see wikipedia "filenames"

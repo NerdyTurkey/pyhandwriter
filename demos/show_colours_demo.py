@@ -2,7 +2,7 @@ ected_fonts# -*- coding: utf-8 -*-
 """
 Created on Sat Oct 17 18:28:38 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 # Pygame Colour Selector - get names of pygame built in colours.

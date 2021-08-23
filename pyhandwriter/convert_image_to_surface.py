@@ -2,7 +2,7 @@
 """
 Created on Wed Oct 28 12:41:55 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 import pygame as pg

@@ -2,7 +2,7 @@
 """
 Created on Sat Oct 17 18:28:38 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 # Demo of pyhandwriter (as used in my first YouTube video on this).
 

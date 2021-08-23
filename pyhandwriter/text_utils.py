@@ -2,7 +2,7 @@
 """
 Created on Tue Oct  6 10:45:06 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 # For consistency, when using in other scripts
 # import text_utils as tu

@@ -2,7 +2,7 @@
 """
 Created on Sun Jan 24 21:30:15 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 import math

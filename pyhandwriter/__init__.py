@@ -2,7 +2,7 @@
 """
 Created on Sat Feb  6 07:37:24 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 # user accesible modules loaded into package namespace

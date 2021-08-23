@@ -2,7 +2,7 @@
 """
 Created on Mon Jan 25 07:13:56 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 from .handwriter_gen import HandWriterGen
 from .enums import Flag

@@ -2,14 +2,14 @@
 """
 Created on Sat May  2 09:24:14 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 """
 Copyright 2017, Silas Gyger, silasgyger@gmail.com, All rights reserved.
 
 Borrowed from https://github.com/Nearoo/pygame-text-input under the MIT license.
-with jt additions to take advantage of pygame2 features
+with NerdyTurkey additions to take advantage of pygame2 features
 """
 
 # import os.path
@@ -57,7 +57,7 @@ class TextInput:
     This class lets the user input a piece of text, e.g. a name or a message.
     This class let's the user input a short, one-lines piece of text at a blinking cursor
     that can be moved using the arrow-keys. Delete, home and end work as well.
-    Adapted by JT to search more intelligently for font and to allow
+    Adapted by NerdyTurkey to search more intelligently for font and to allow
     alpha channel on text_color (ie.g. semi-transparent text)
     """
 
@@ -215,7 +215,7 @@ class TextInput:
                 )
 
         # Re-render text surface:
-        # JT mod to pad out text surface to allow cursor to be offset from last char
+        # NerdyTurkey mod to pad out text surface to allow cursor to be offset from last char
         temp_surface, _ = self.font_object.render(
             self.input_string, fgcolor=self.text_color, bgcolor=None
         )  # transparent background

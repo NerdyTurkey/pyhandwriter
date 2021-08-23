@@ -2,7 +2,7 @@
 """
 Created on Sun Aug 15 12:59:13 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 from .style_tokens import STYLE_TOKENS

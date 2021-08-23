@@ -2,7 +2,7 @@
 """
 Created on Fri Oct 16 11:31:10 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 import warnings

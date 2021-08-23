@@ -2,13 +2,15 @@
 """
 Created on Sun Jan 24 21:34:30 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 import time  # more accurate than pygame timers
+
 import pygame as pg
-from .handwriter_gen import HandWriterGen
+
 from .enums import Flag
+from .handwriter_gen import HandWriterGen
 
 
 class HandWriterSprite(pg.sprite.DirtySprite):

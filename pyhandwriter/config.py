@@ -2,7 +2,7 @@
 """
 Created on Mon Feb  8 05:44:47 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 failed_imports = []

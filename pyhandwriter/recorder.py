@@ -2,7 +2,7 @@
 """
 Created on Tue Oct 13 17:59:00 2020
 
-@author: jt
+@author: NerdyTurkey
 """
 
 import os

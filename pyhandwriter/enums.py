@@ -2,7 +2,7 @@
 """
 Created on Sun Feb  7 06:23:49 2021
 
-@author: jwgti
+@author: NerdyTurkey
 """
 
 from enum import Enum, auto
