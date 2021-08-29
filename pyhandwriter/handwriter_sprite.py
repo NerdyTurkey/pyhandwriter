@@ -14,6 +14,9 @@ from .handwriter_gen import HandWriterGen
 
 
 class HandWriterSprite(pg.sprite.DirtySprite):
+    """
+    TODO docstring
+    """
     # stores all instances to allow separate update call
     handwriter_sprites = pg.sprite.LayeredDirty()
 
@@ -123,7 +126,7 @@ class HandWriterSprite(pg.sprite.DirtySprite):
     def update(self, dt):
         # dt not used
         # In all cases, want sprite rect to continue to be updated in display
-        # by setting self.diry=1, else any other sprite passing over it will
+        # by setting self.dirty=1, else any other sprite passing over it will
         # leave trails; also sprite won't move properly.
         self.dirty = 1
         if self.finished or self.paused:
@@ -153,6 +156,10 @@ class HandWriterSprite(pg.sprite.DirtySprite):
         self.overflow = False
         self.paused = False
         self._set_generator()
+
+    def change_text(self, text):
+        self.reset()
+        self.hw.change_text(text)
 
     def change_speed(self, sf):
         # generator needs to be started before sending something to it

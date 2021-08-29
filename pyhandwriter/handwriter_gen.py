@@ -148,6 +148,10 @@ class HandWriterGen:
     def change_surf(self, surf):
         self.surf = surf
 
+    # experimental
+    def change_text(self, text):
+        self._prepare_text(text)
+
     def _load_hw_dict(self, hw_font, path):
         """
         Creates a hw_dict by loading pre-recorded path files.
@@ -1147,9 +1151,9 @@ class HandWriterGen:
         r"An inline latex eqn in magenta \magenta{$a x^2 + b x + c = 0$}."\
         r"A centred newline latext equation "\
         r"\bigger{\gold{£F(x) = \int^a_b \frac{1}{3}x^3£}}"\
-        r"Emojies and arrows: Happy face \r \bigger{\green{#happy#}}\n"\
-        r"Things getting you \d \bigger{\blue{#sad#}} ?\n"\
-        r"Left arrow #left#, down arrow #down#"
+        r"Emojies and arrows: Happy face \r \bigger{\green{`happy`}}\n"\
+        r"Things getting you \d \bigger{\blue{`sad`}} ?\n"\
+        r"Left arrow `left`, down arrow `down`"
 
         """
         # first check for illegal Esc tokens in text
@@ -1195,18 +1199,7 @@ class HandWriterGen:
         self.props.line_spacing = (
             self.props.pt_size * 1.5 if line_spacing is None else line_spacing
         )
-        # the next two can get populated by preprocess_text()!
-        self.props.latex_inline_list = None
-        self.props.latex_newline_list = None
-        self.props.symbol_list = None
-        self.props.parsed_text = parse(
-            self._preprocess_text(text), style_tokens.STYLE_TOKENS
-        )
-        if self.props.parsed_text is None:
-            error_msg = f"""Error parsing text. Check that all curly brackets
-            are paired and that all Escaped tokens are legal,
-            especially those starting with {s.ESC_CHARS}"""
-            raise Exception(error_msg)
+        self._prepare_text(text)
         self.props.hyphenation = hyphenation
         self.props.instantly = instantly
 
@@ -1449,3 +1442,17 @@ class HandWriterGen:
             return oneshot_generator(val)
 
         return wtg  # generator
+
+    def _prepare_text(self, text):
+        # the next two can get populated by preprocess_text()!
+        self.props.latex_inline_list = None
+        self.props.latex_newline_list = None
+        self.props.symbol_list = None
+        self.props.parsed_text = parse(
+            self._preprocess_text(text), style_tokens.STYLE_TOKENS
+        )
+        if self.props.parsed_text is None:
+            error_msg = f"""Error parsing text. Check that all curly brackets
+            are paired and that all Escaped tokens are legal,
+            especially those starting with {s.ESC_CHARS}"""
+            raise Exception(error_msg)
