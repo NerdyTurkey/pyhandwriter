@@ -8,8 +8,10 @@ Created on Sun Jan 17 15:29:39 2021
 import os
 
 from pathlib import Path
+
 path = Path(__file__).resolve().parents[1]
 import sys
+
 sys.path.insert(0, str(path))
 
 from itertools import cycle
@@ -46,11 +48,11 @@ def main():
 
     PLAYER_LAYER = 10
     PLAYER_SPEED = 0.1
-    PLAYER_START_POS = WIDTH//2, HEIGHT - 40
+    PLAYER_START_POS = WIDTH // 2, HEIGHT - 40
 
     CAT_LAYER = 20
     CAT_SPEED = 0.05
-    CAT_START_POS  = WIDTH//2, HEIGHT
+    CAT_START_POS = WIDTH // 2, HEIGHT
 
     # speech bubbles
     BUBBLE_PLAYER_LAYER = 15
@@ -60,18 +62,20 @@ def main():
         r"jest, of most excellent fancy."
     )
 
-    BUBBLE_CAT_TEXTS = cycle([
-        "Shakespeare is not my bag baby",
-        "He's scaring off all the mice",
-        "How do I get off this screen ?",
-        "Call me catty, but he really sux",
-        "I wish I was more animated",
-        "He should paws more often",
-        "What a ham - let !",
-        "Is that a mouse I see before me ?",
-        "This is a bit fishy",
-        "What a total numb skull",
-    ])
+    BUBBLE_CAT_TEXTS = cycle(
+        [
+            "Shakespeare is not my bag baby",
+            "He's scaring off all the mice",
+            "How do I get off this screen ?",
+            "Call me catty, but he really sux",
+            "I wish I was more animated",
+            "He should paws more often",
+            "What a ham - let !",
+            "Is that a mouse I see before me ?",
+            "This is a bit fishy",
+            "What a total numb skull",
+        ]
+    )
 
     BUBBLE_CAT_LAYER = 25
     BUBBLE_CAT_SIZE = 350, 200
@@ -92,21 +96,37 @@ def main():
     allsprites = pg.sprite.LayeredDirty()  # container for sprites
 
     #   player
-    hamlet_img = pg.image.load(os.path.join("demo_assets", "hamlet.png")).convert_alpha()
+    hamlet_img = pg.image.load(
+        os.path.join("demo_assets", "hamlet.png")
+    ).convert_alpha()
     hamlet_img = pg.transform.rotozoom(hamlet_img, 0, 0.6)
-    add_outline(hamlet_img, (150,150,150), 1 )
+    add_outline(hamlet_img, (150, 150, 150), 1)
     hamlet_img.set_alpha(150)
-    player = Player(allsprites, PLAYER_LAYER, screen.get_size(), img=hamlet_img,
-                    pos=PLAYER_START_POS, speed=PLAYER_SPEED)
+    player = Player(
+        allsprites,
+        PLAYER_LAYER,
+        screen.get_size(),
+        img=hamlet_img,
+        pos=PLAYER_START_POS,
+        speed=PLAYER_SPEED,
+    )
 
     #   cat
     cat_img = pg.image.load(os.path.join("demo_assets", "cat.png")).convert_alpha()
-    add_outline(cat_img, (150,150,150), 1)
-    cat = NPC(allsprites, CAT_LAYER, screen.get_size(), img=cat_img,
-              pos=CAT_START_POS, speed=CAT_SPEED)
+    add_outline(cat_img, (150, 150, 150), 1)
+    cat = NPC(
+        allsprites,
+        CAT_LAYER,
+        screen.get_size(),
+        img=cat_img,
+        pos=CAT_START_POS,
+        speed=CAT_SPEED,
+    )
 
     #   speech bubbles
-    bubble_player_img = pg.image.load(os.path.join("demo_assets", "scroll.png")).convert_alpha()
+    bubble_player_img = pg.image.load(
+        os.path.join("demo_assets", "scroll.png")
+    ).convert_alpha()
     bubble_player_img = pg.transform.scale(bubble_player_img, BUBBLE_PLAYER_SIZE)
     bubble_player = ph.HandWriterSprite(
         allsprites,
@@ -121,9 +141,13 @@ def main():
         nib={"width": 2, "angle": 45},
     )
 
-    bubble_cat_img = pg.image.load(os.path.join("demo_assets", "thought_bubble.png")).convert_alpha()
+    bubble_cat_img = pg.image.load(
+        os.path.join("demo_assets", "thought_bubble.png")
+    ).convert_alpha()
     bubble_cat_img = pg.transform.scale(bubble_cat_img, BUBBLE_CAT_SIZE)
-    fish_bones_img = pg.image.load(os.path.join("demo_assets", "fish_bones.png")).convert_alpha()
+    fish_bones_img = pg.image.load(
+        os.path.join("demo_assets", "fish_bones.png")
+    ).convert_alpha()
     bubble_cat = ph.HandWriterSprite(
         allsprites,
         BUBBLE_CAT_LAYER,
@@ -140,11 +164,11 @@ def main():
         # nib={"width": 1, "angle": 45},
     )
 
-#   raindrops
-#     [
-#         Rain(allsprites, RAIN_LAYER, screen.get_size(), angle=3)
-#         for _ in range(NUM_RAINDROPS)
-#     ]
+    #   raindrops
+    #     [
+    #         Rain(allsprites, RAIN_LAYER, screen.get_size(), angle=3)
+    #         for _ in range(NUM_RAINDROPS)
+    #     ]
 
     # Main Game Loop---------------------------------------------------------
 
@@ -204,11 +228,10 @@ def main():
         allsprites.update(dt)
 
         bubble_player.rect.midbottom = (
-            player.rect.midtop[0], player.rect.midtop[1] + 20
+            player.rect.midtop[0],
+            player.rect.midtop[1] + 20,
         )
-        bubble_cat.rect.midbottom = (
-            cat.rect.midtop[0], cat.rect.midtop[1] + 20
-        )
+        bubble_cat.rect.midbottom = (cat.rect.midtop[0], cat.rect.midtop[1] + 20)
 
         #   Draw
         rects = allsprites.draw(screen, background)
@@ -226,6 +249,7 @@ def main():
             elif pg.time.get_ticks() - pause_start > 2000:
                 bubble_cat.change_text(next(BUBBLE_CAT_TEXTS))
                 pause_start = None
+
 
 if __name__ == "__main__":
     main()
