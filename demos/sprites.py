@@ -86,6 +86,7 @@ class Rain(pg.sprite.DirtySprite):
         w = thickness + int(length * abs(sin(radians(self.angle))))
         h = int(length * cos(radians(self.angle)))
         self.image = pg.Surface((w, h), pg.SRCALPHA)
+        self.offset = 2 * h # see update method for explanation
         self.pos = vec(randrange(self.screen_width), -randrange(self.screen_height))
         if self.angle >= 0:
             # sloping from topleft to bottom right
@@ -107,11 +108,11 @@ class Rain(pg.sprite.DirtySprite):
     def update(self, dt):
         self.pos += self.vel * dt
         # screen wrap
-        x, y = int(self.pos.x % self.screen_width), int(self.pos.y % self.screen_height)
+        # not sure why offset is needed, but if omitted, the rain drop is not erased in a narrow
+        # strip at the bottom of screen.
+        x, y = int(self.pos.x % (self.screen_width-self.offset)), int(self.pos.y % (self.screen_height-self.offset))
         if self.angle >= 0:
             self.rect.topleft = x, y
         else:
             self.rect.topright = x, y
-
-        self.pos = x, y
         self.dirty = 1

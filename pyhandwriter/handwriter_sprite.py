@@ -23,35 +23,35 @@ class HandWriterSprite(pg.sprite.DirtySprite):
     is_first_tick = True
 
     def __init__(
-        self,
-        sprite_group,
-        layer,
-        surf,
-        text,
-        surf_topleft=None,
-        text_rect=None,
-        hw_font=None,
-        colour=None,
-        linewidth=None,
-        smooth_level=None,
-        nib=None,
-        spray=None,
-        pt_size=None,
-        char_spacing=None,
-        word_spacing=None,
-        line_spacing=None,
-        speed_mult=None,
-        instantly=False,
-        cursor=None,
-        cursor_sf=None,
-        num_tabs=None,
-        hyphenation=False,
-        surf_bg_col=None,
-        surf_border_width=None,
-        surf_border_col=None,
-        text_rect_bg_col=None,
-        text_rect_border_width=None,
-        text_rect_border_col=None,
+            self,
+            sprite_group,
+            layer,
+            surf,
+            text,
+            surf_topleft=None,
+            text_rect=None,
+            hw_font=None,
+            colour=None,
+            linewidth=None,
+            smooth_level=None,
+            nib=None,
+            spray=None,
+            pt_size=None,
+            char_spacing=None,
+            word_spacing=None,
+            line_spacing=None,
+            speed_mult=None,
+            instantly=False,
+            cursor=None,
+            cursor_sf=None,
+            num_tabs=None,
+            hyphenation=False,
+            surf_bg_col=None,
+            surf_border_width=None,
+            surf_border_col=None,
+            text_rect_bg_col=None,
+            text_rect_border_width=None,
+            text_rect_border_col=None,
     ):
         self._layer = layer  # Note: need to set layer before super init!
         pg.sprite.DirtySprite.__init__(self)
@@ -128,6 +128,7 @@ class HandWriterSprite(pg.sprite.DirtySprite):
         # In all cases, want sprite rect to continue to be updated in display
         # by setting self.dirty=1, else any other sprite passing over it will
         # leave trails; also sprite won't move properly.
+        # print(self.speed_mult) # debug
         self.dirty = 1
         if self.finished or self.paused:
             # print(self, "in update, paused") # debug
@@ -171,10 +172,13 @@ class HandWriterSprite(pg.sprite.DirtySprite):
         self.g.send(sf)
 
     def hide(self):
+        # kill only removes instance from sprite group
+        # so unhide just has to add it back to the sprite group
         self.kill()
 
     def unhide(self):
         self.sprite_group.add(self)
+        self.handwriter_sprites.add(self)
 
     @classmethod
     def tick(cls, fps):
