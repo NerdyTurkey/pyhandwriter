@@ -48,16 +48,23 @@ def main():
     pg.init()
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     pg.mouse.set_visible(False)
-    allsprites = pg.sprite.Group()  # container for sprites
+
+    # container for sprites
+    allsprites = pg.sprite.Group()
 
     img = pg.Surface((450, 300))
     img.fill(SPRITE_COLOUR)
+
+    # We will toggle between these two texts using the sprite's
+    # change_text method
     text1 = "I am a \white{COOL} sprite with animated handwriting !"
     text2 = (
         r"I am happy \halfspeed{\bigger{\blue{`happy`}}}"
         r"\nI am excited \halfspeed{\bigger{\orange{`excited`}}}"
         r"\nI \bigger{\red{`heart`}} to sing \bigger{\yellow{`music`} \down{\yellow{`music`}}"
     )
+
+    # make a HandWriterSprite object
     hw_sprite = ph.HandWriterSprite(
         allsprites,  # sprite group
         1,  # layer (don't care here)
@@ -152,6 +159,7 @@ def main():
         # Finish condition
         if hw_sprite.finished:
             # code here will run when all the text has been handwritten
+            # or when writing overruns its bounding rect
             pass
 
 
