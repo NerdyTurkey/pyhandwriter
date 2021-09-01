@@ -54,8 +54,8 @@ def main():
     img.fill(SPRITE_COLOUR)
     text1 = "I am a \white{COOL} sprite with animated handwriting !"
     text2 = (
-        r"I am happy \bigger{\blue{`happy`}}"
-        r"\nI am excited \bigger{\orange{`excited`}}"
+        r"I am happy \halfspeed{\bigger{\blue{`happy`}}}"
+        r"\nI am excited \halfspeed{\bigger{\orange{`excited`}}}"
         r"\nI \bigger{\red{`heart`}} to sing \bigger{\yellow{`music`} \down{\yellow{`music`}}"
     )
     hw_sprite = ph.HandWriterSprite(
@@ -73,10 +73,9 @@ def main():
     paused = False
     hidden = False
     text = text1
-    x, y = WIDTH // 2, HEIGHT // 2
+    x, y = WIDTH // 2, HEIGHT // 2 # centre pos of sprite
 
     # Main Game Loop
-
     while running:
         # instead of usual
         # dt = clock.tick()(FPS)
@@ -130,6 +129,7 @@ def main():
                     hidden = not hidden
 
         # Move sprite with arrow keys
+        # 8-way movement, but diagonal speed not corrected
         keys = pg.key.get_pressed()
         x += (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * SPEED
         y += (keys[pg.K_DOWN] - keys[pg.K_UP]) * SPEED
@@ -145,7 +145,7 @@ def main():
         allsprites.draw(screen)
         pg.display.flip()
 
-        # Write window caption
+        # Set window caption
         if dt > 0:
             pg.display.set_caption(f"FPS = {1000 * 1 / dt:.0f}")
 

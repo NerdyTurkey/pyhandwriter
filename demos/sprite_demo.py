@@ -31,14 +31,14 @@ def add_outline(surf, colour, thickness):
 def main():
     """
     More fancy demo of HandWriterSprite class in pyhandwriter to give 
-    a taste of using them for a dialogue system (speech/thought bubbles).
+    a taste of it use in a dialogue system (speech/thought bubbles).
     
     To keep things simple, no attempt has been made to animate the 
     characters movement!
     
     Instructions:
     =============
-    Use arrows to move Hamlet (the cat moves on its own accord).
+    Use arrows to move Hamlet (the cat moves independently).
 
     The following commands control Hamlet's speech bubble:
         SPACE = pause/unpause 
@@ -103,7 +103,7 @@ def main():
 
     pg.init()
     screen = pg.display.set_mode((WIDTH, HEIGHT))
-    clock = pg.time.Clock()
+    pg.mouse.set_visible(False)
 
     # Load background image and scale to screen size
     background = pg.image.load(os.path.join("demo_assets", "cem2.jpg")).convert_alpha()
@@ -111,7 +111,8 @@ def main():
     sf = WIDTH / bg_w if WIDTH / HEIGHT < bg_w / bg_h else HEIGHT / bg_h
     background = pg.transform.rotozoom(background, 0, sf)
 
-    allsprites = pg.sprite.LayeredDirty()  # container for sprites
+    # container for sprites
+    allsprites = pg.sprite.LayeredDirty()
 
     # player sprite
     player_img = pg.image.load(
@@ -174,9 +175,7 @@ def main():
         BUBBLE_CAT_LAYER,
         bubble_cat_img,
         next(BUBBLE_CAT_TEXTS),
-        # hw_font="hw_lucindahandwriting",
         hw_font="hw_brushscript",
-        # surf_bg_col=(0,0,0),
         text_rect=(25, 5, 320, 170),  # rel to surf
         colour=(255, 255, 255),
         pt_size=36,
@@ -195,7 +194,7 @@ def main():
     paused = False
     hidden = False
 
-    # I wrote this Schedule class to make it easy to schedule a series
+    # I wrote this Scheduler class to make it easy to schedule a series
     # of consecutive events in a game class after a start condition is met.
     # I may do a short video on this at some point.
     scheduler = Scheduler()
@@ -246,7 +245,7 @@ def main():
                     hidden = not hidden
 
                 # Note: player and cat movement handled in their respective
-                # update methods.
+                # sprite update methods (see sprites.py)
 
         # Update
         allsprites.update(dt)
@@ -262,6 +261,7 @@ def main():
         rects = allsprites.draw(screen, background)
         pg.display.update(rects)
 
+        # Set window caption
         if dt > 0:
             pg.display.set_caption(f"FPS = {1000 * 1 / dt:.0f}")
 
@@ -269,15 +269,17 @@ def main():
             bubble_player.change_text(next(BUBBLE_PLAYER_TEXTS))
 
         """
+        Notes about schedule.update() call below: 
+        
         When start condition is met, the events are processed in turn:
         
-        after a delay of PAUSE_DURATION, bubble_cat.hide is called  with 
+        After a delay of PAUSE_DURATION, bubble_cat.hide method is called  with 
         args = () and kwargs = {}
         
-        Then after a delay of PAUSE_DURATION, bubble-cat.unhide is called with
+        Then after a delay of PAUSE_DURATION, bubble-cat.unhide method is called with
         args = () and kwargs = {}
         
-        Then after zero delay, bubble_cat.change_text is called with 
+        Then after zero delay, bubble_cat.change_text method is called with 
         args = (next(BUBBLE_CAT_TEXTS),), kwargs = {}
         """
         scheduler.update(
@@ -291,6 +293,4 @@ def main():
 if __name__ == "__main__":
     main()
     pg.quit()
-    sys.exit()
-    sys.exit()
     sys.exit()
