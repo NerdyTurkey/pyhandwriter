@@ -7,20 +7,16 @@ Created on Sun Jan 17 15:29:39 2021
 
 import os
 from pathlib import Path
+
 path = Path(__file__).resolve().parents[1]
 import sys
+
 sys.path.insert(0, str(path))
 from itertools import cycle
 import pygame as pg
 import pyhandwriter as ph
 from sprites import Player, NPC, Rain
 from scheduler import Scheduler
-
-
-def bye():
-    print("goodbye!")
-    pg.quit()
-    sys.exit()
 
 
 def add_outline(surf, colour, thickness):
@@ -33,10 +29,27 @@ def add_outline(surf, colour, thickness):
 
 
 def main():
-    HELP_TEXT = (
-        "LEFT/RIGHT arrows: move, SPACE: pause/unpause, "
-        "RETURN: hide/unhide, R: Reset, F=Faster, S=Slower, Esc = quit"
+    """
+    More fancy demo of HandWriterSprite class in pyhandwriter to give 
+    a taste of using them for a dialogue system (speech/thought bubbles).
+    
+    To keep things simple, no attempt has been made to animate the 
+    characters movement!
+    
+    Instructions:
+    =============
+    Use arrows to move Hamlet (the cat moves on its own accord).
+
+    The following commands control Hamlet's speech bubble:
+        SPACE = pause/unpause 
+        RETURN = hide/unhide
+        R = Reset writing
+        C = Change text
+        F = Faster writing
+        S = Slower writing
+        Esc or close window = quit"
     )
+    """
     FPS = 60
     WIDTH, HEIGHT = 960, 640
 
@@ -98,10 +111,9 @@ def main():
     sf = WIDTH / bg_w if WIDTH / HEIGHT < bg_w / bg_h else HEIGHT / bg_h
     background = pg.transform.rotozoom(background, 0, sf)
 
-    # Spawn Sprites------------------------------------------------------------
     allsprites = pg.sprite.LayeredDirty()  # container for sprites
 
-    #   player
+    # player sprite
     player_img = pg.image.load(
         os.path.join("demo_assets", "hamlet.png")
     ).convert_alpha()
@@ -117,7 +129,7 @@ def main():
         speed=PLAYER_SPEED,
     )
 
-    #   cat
+    # cat sprite
     cat_img = pg.image.load(os.path.join("demo_assets", "cat.png")).convert_alpha()
     add_outline(cat_img, (150, 150, 150), 1)
     cat = NPC(
@@ -129,11 +141,7 @@ def main():
         speed=CAT_SPEED,
     )
 
-    #   speech bubbles
-    # basic
-    # bubble_player_img = pg.Surface(BUBBLE_PLAYER_SIZE, pg.SRCALPHA)
-
-    # fancy
+    # player's speech bubble
     bubble_player_img = pg.image.load(
         os.path.join("demo_assets", "scroll.png")
     ).convert_alpha()
@@ -153,10 +161,7 @@ def main():
         nib={"width": 2, "angle": 45},
     )
 
-    # basic
-    # bubble_cat_img = pg.Surface(BUBBLE_CAT_SIZE, pg.SRCALPHA)
-
-    # fancy
+    # cat's thought bubble
     bubble_cat_img = pg.image.load(
         os.path.join("demo_assets", "thought_bubble.png")
     ).convert_alpha()
@@ -180,37 +185,39 @@ def main():
         cursor_sf=0.2,
     )
 
-    # raindrops
-    # [
-    #     Rain(allsprites, RAIN_LAYER, screen.get_size(), angle=3)
-    #     for _ in range(NUM_RAINDROPS)
-    # ]
-
-    # Main Game Loop---------------------------------------------------------
+    # raindrop sprites
+    [
+        Rain(allsprites, RAIN_LAYER, screen.get_size(), angle=3)
+        for _ in range(NUM_RAINDROPS)
+    ]
 
     running = True
     paused = False
     hidden = False
-    # pause1_start_time = None
-    # pause2_start_time = None
+
+    # I wrote this Schedule class to make it easy to schedule a series
+    # of consecutive events in a game class after a start condition is met.
+    # I may do a short video on this at some point.
     scheduler = Scheduler()
 
+    # Main Game Loop
     while running:
+        # instead of usual
         # dt = clock.tick()(FPS)
+        # do following
         dt = ph.HandWriterSprite.tick(FPS)
 
-        events = pg.event.get()
-
         #   Check for user events
+        events = pg.event.get()
         for e in events:
 
             if e.type == pg.QUIT:
-                bye()
+                return
 
             if e.type == pg.KEYDOWN:
 
                 if e.key == pg.K_ESCAPE:
-                    bye()
+                    return
 
                 if e.key == pg.K_f:
                     # write faster
@@ -231,10 +238,6 @@ def main():
                         bubble_player.pause()
                     paused = not paused
 
-                if e.key == pg.K_h:
-                    # hide
-                    bubble_player.hide()
-
                 if e.key == pg.K_RETURN:
                     if hidden:
                         bubble_player.unhide()
@@ -242,51 +245,52 @@ def main():
                         bubble_player.hide()
                     hidden = not hidden
 
-        #   Update
+                # Note: player and cat movement handled in their respective
+                # update methods.
+
+        # Update
         allsprites.update(dt)
 
+        # Bubbles track characters
         bubble_player.rect.midbottom = (
             player.rect.midtop[0],
             player.rect.midtop[1] + 20,
         )
         bubble_cat.rect.midbottom = (cat.rect.midtop[0], cat.rect.midtop[1] + 20)
 
-        #   Draw
+        # Draw
         rects = allsprites.draw(screen, background)
         pg.display.update(rects)
 
         if dt > 0:
-            pg.display.set_caption(f"FPS = {1000 * 1 / dt:.0f} {HELP_TEXT}")
+            pg.display.set_caption(f"FPS = {1000 * 1 / dt:.0f}")
 
         if bubble_player.finished:
             bubble_player.change_text(next(BUBBLE_PLAYER_TEXTS))
 
-        # Following code implements 2 counters; one to keep text displayed for a while
-        # after it is finished writing, and when that times out, the text bubble is hidden
-        # and another counter is started - when that times out the text bubble is unhidden
-        # and restarted with new text.
-        # if pause1_start_time is not None:
-        #     now = pg.time.get_ticks()
-        #     if now - pause1_start_time > PAUSE_DURATION:
-        #         pause1_start_time = None
-        #         bubble_cat.hide()
-        #         pause2_start_time = now
-        # elif pause2_start_time is not None:
-        #     if pg.time.get_ticks() - pause2_start_time > PAUSE_DURATION:
-        #         pause2_start_time = None
-        #         bubble_cat.unhide()
-        #         bubble_cat.change_text(next(BUBBLE_CAT_TEXTS))
-        # elif bubble_cat.finished:
-        #     pause1_start_time = pg.time.get_ticks()
-
-        scheduler.update(bubble_cat.finished,
-                         (PAUSE_DURATION, bubble_cat.hide, (), {}),
-                         (PAUSE_DURATION, bubble_cat.unhide, (), {}),
-                         (0, bubble_cat.change_text, (next(BUBBLE_CAT_TEXTS),), {})
-                         )
+        """
+        When start condition is met, the events are processed in turn:
+        
+        after a delay of PAUSE_DURATION, bubble_cat.hide is called  with 
+        args = () and kwargs = {}
+        
+        Then after a delay of PAUSE_DURATION, bubble-cat.unhide is called with
+        args = () and kwargs = {}
+        
+        Then after zero delay, bubble_cat.change_text is called with 
+        args = (next(BUBBLE_CAT_TEXTS),), kwargs = {}
+        """
+        scheduler.update(
+            bubble_cat.finished,  # start condition
+            (PAUSE_DURATION, bubble_cat.hide, (), {}),  # event 1
+            (PAUSE_DURATION, bubble_cat.unhide, (), {}),  # event 2
+            (0, bubble_cat.change_text, (next(BUBBLE_CAT_TEXTS),), {}),  # event 3
+        )
 
 
 if __name__ == "__main__":
     main()
     pg.quit()
+    sys.exit()
+    sys.exit()
     sys.exit()
