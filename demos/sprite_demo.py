@@ -31,7 +31,7 @@ def add_outline(surf, colour, thickness):
 def main():
     """
     More fancy demo of HandWriterSprite class in pyhandwriter to give 
-    a taste of it use in a dialogue system (speech/thought bubbles).
+    a taste of its use in a dialogue system (speech/thought bubbles).
     
     To keep things simple, no attempt has been made to animate the 
     characters movement!
@@ -153,7 +153,6 @@ def main():
         BUBBLE_PLAYER_LAYER,
         bubble_player_img,
         next(BUBBLE_PLAYER_TEXTS),
-        # surf_bg_col=(255,255,255),
         text_rect=(40, 50, 400, 290),  # rel to surf
         colour=(0, 0, 0),
         pt_size=24,
