@@ -194,7 +194,7 @@ def main():
     hidden = False
 
     # I wrote this Scheduler class to make it easy to schedule a series
-    # of consecutive events in a game class after a start condition is met.
+    # of consecutive events in a game loop after a start condition is met.
     # I may do a short video on this at some point.
     scheduler = Scheduler()
 
