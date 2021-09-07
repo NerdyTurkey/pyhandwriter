@@ -50,23 +50,23 @@ def main():
         Esc or close window = quit"
     )
     """
-    FPS = 60
-    WIDTH, HEIGHT = 960, 640
+    fps = 60
+    width, height = 960, 640
 
-    PLAYER_LAYER = 10
-    PLAYER_SPEED = 0.1
-    PLAYER_START_POS = WIDTH // 2, HEIGHT - 40
-    SPEED_CHANGE_FACTOR = 1.1
+    player_layer = 10
+    player_speed = 0.1
+    player_start_pos = width // 2, height - 40
+    speed_change_factor = 1.1
 
-    CAT_LAYER = 20
-    CAT_SPEED = 0.05
-    CAT_START_POS = WIDTH // 2, HEIGHT
+    cat_layer = 20
+    cat_speed = 0.05
+    cat_start_pos = width // 2, height
 
     # speech bubbles
-    BUBBLE_PLAYER_LAYER = 15
-    BUBBLE_PLAYER_SIZE = 450, 350
+    bubble_player_layer = 15
+    bubble_player_size = 450, 350
 
-    BUBBLE_PLAYER_TEXTS = cycle(
+    bubble_player_texts = cycle(
         [
             "Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most excellent fancy.",
             "He hath borne me on his back a thousand times",
@@ -80,7 +80,7 @@ def main():
         ]
     )
 
-    BUBBLE_CAT_TEXTS = cycle(
+    bubble_cat_texts = cycle(
         [
             "Shakespeare is not my bag baby",
             "He is scaring off all the mice",
@@ -94,21 +94,21 @@ def main():
             "What a total numb skull",
         ]
     )
-    BUBBLE_CAT_LAYER = 25
-    BUBBLE_CAT_SIZE = 350, 200
-    PAUSE_DURATION = 2000  # millisec
+    bubble_cat_layer = 25
+    bubble_cat_size = 350, 200
+    pause_duration = 2000  # millisec
 
-    NUM_RAINDROPS = 200  # 200
-    RAIN_LAYER = 50
+    num_raindrops = 200  # 200
+    rain_layer = 50
 
     pg.init()
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    screen = pg.display.set_mode((width, height))
     pg.mouse.set_visible(False)
 
     # Load background image and scale to screen size
     background = pg.image.load(os.path.join("demo_assets", "cem2.jpg")).convert_alpha()
     bg_w, bg_h = background.get_size()
-    sf = WIDTH / bg_w if WIDTH / HEIGHT < bg_w / bg_h else HEIGHT / bg_h
+    sf = width / bg_w if width / height < bg_w / bg_h else height / bg_h
     background = pg.transform.rotozoom(background, 0, sf)
 
     # container for sprites
@@ -123,11 +123,11 @@ def main():
     player_img.set_alpha(150)
     player = Player(
         allsprites,
-        PLAYER_LAYER,
+        player_layer,
         screen.get_size(),
         img=player_img,
-        pos=PLAYER_START_POS,
-        speed=PLAYER_SPEED,
+        pos=player_start_pos,
+        speed=player_speed,
     )
 
     # cat sprite
@@ -135,24 +135,24 @@ def main():
     add_outline(cat_img, (150, 150, 150), 1)
     cat = NPC(
         allsprites,
-        CAT_LAYER,
+        cat_layer,
         screen.get_size(),
         img=cat_img,
-        pos=CAT_START_POS,
-        speed=CAT_SPEED,
+        pos=cat_start_pos,
+        speed=cat_speed,
     )
 
     # player's speech bubble
     bubble_player_img = pg.image.load(
         os.path.join("demo_assets", "scroll.png")
     ).convert_alpha()
-    bubble_player_img = pg.transform.scale(bubble_player_img, BUBBLE_PLAYER_SIZE)
+    bubble_player_img = pg.transform.scale(bubble_player_img, bubble_player_size)
 
     bubble_player = ph.HandWriterSprite(
         allsprites,
-        BUBBLE_PLAYER_LAYER,
+        bubble_player_layer,
         bubble_player_img,
-        next(BUBBLE_PLAYER_TEXTS),
+        next(bubble_player_texts),
         text_rect=(40, 50, 400, 290),  # rel to surf
         colour=(0, 0, 0),
         pt_size=24,
@@ -165,15 +165,15 @@ def main():
     bubble_cat_img = pg.image.load(
         os.path.join("demo_assets", "thought_bubble.png")
     ).convert_alpha()
-    bubble_cat_img = pg.transform.scale(bubble_cat_img, BUBBLE_CAT_SIZE)
+    bubble_cat_img = pg.transform.scale(bubble_cat_img, bubble_cat_size)
     fish_bones_img = pg.image.load(
         os.path.join("demo_assets", "fish_bones.png")
     ).convert_alpha()
     bubble_cat = ph.HandWriterSprite(
         allsprites,
-        BUBBLE_CAT_LAYER,
+        bubble_cat_layer,
         bubble_cat_img,
-        next(BUBBLE_CAT_TEXTS),
+        next(bubble_cat_texts),
         hw_font="hw_brushscript",
         text_rect=(25, 5, 320, 170),  # rel to surf
         colour=(255, 255, 255),
@@ -185,8 +185,8 @@ def main():
 
     # raindrop sprites
     [
-        Rain(allsprites, RAIN_LAYER, screen.get_size(), angle=3)
-        for _ in range(NUM_RAINDROPS)
+        Rain(allsprites, rain_layer, screen.get_size(), angle=3)
+        for _ in range(num_raindrops)
     ]
 
     running = True
@@ -203,7 +203,7 @@ def main():
         # instead of usual
         # dt = clock.tick()(FPS)
         # do following
-        dt = ph.HandWriterSprite.tick(FPS)
+        dt = ph.HandWriterSprite.tick(fps)
 
         #   Check for user events
         events = pg.event.get()
@@ -219,11 +219,11 @@ def main():
 
                 if e.key == pg.K_f:
                     # write faster
-                    bubble_player.change_speed(SPEED_CHANGE_FACTOR)
+                    bubble_player.change_speed(speed_change_factor)
 
                 if e.key == pg.K_s:
                     # write slower
-                    bubble_player.change_speed(1 / SPEED_CHANGE_FACTOR)
+                    bubble_player.change_speed(1 / speed_change_factor)
 
                 if e.key == pg.K_r:
                     # reset writing
@@ -265,7 +265,7 @@ def main():
             pg.display.set_caption(f"FPS = {1000 * 1 / dt:.0f}")
 
         if bubble_player.finished:
-            bubble_player.change_text(next(BUBBLE_PLAYER_TEXTS))
+            bubble_player.change_text(next(bubble_player_texts))
 
         """
         Notes about schedule.update() call below: 
@@ -283,9 +283,9 @@ def main():
         """
         scheduler.update(
             bubble_cat.finished,  # start condition
-            (PAUSE_DURATION, bubble_cat.hide, (), {}),  # event 1
-            (PAUSE_DURATION, bubble_cat.unhide, (), {}),  # event 2
-            (0, bubble_cat.change_text, (next(BUBBLE_CAT_TEXTS),), {}),  # event 3
+            (pause_duration, bubble_cat.hide, (), {}),  # event 1
+            (pause_duration, bubble_cat.unhide, (), {}),  # event 2
+            (0, bubble_cat.change_text, (next(bubble_cat_texts),), {}),  # event 3
         )
 
 

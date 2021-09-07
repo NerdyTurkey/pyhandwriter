@@ -36,24 +36,24 @@ def main():
     )
     """
 
-    FPS = 60
-    WIDTH, HEIGHT = 960, 640
-    SPEED = 2  # sprite speed across screen
-    SPEED_CHANGE_FACTOR = 1.1  # for changing handwriting speed
+    fps = 60
+    width, height = 960, 640
+    speed = 2  # sprite speed across screen
+    speed_change_factor = 1.1  # for changing handwriting speed
 
-    SCREEN_COLOUR = 239, 111, 108
-    SPRITE_COLOUR = 70, 87, 117
-    LINE_COLOUR = 86, 227, 159
+    screen_colour = 239, 111, 108
+    sprite_colour = 70, 87, 117
+    line_colour = 86, 227, 159
 
     pg.init()
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    screen = pg.display.set_mode((width, height))
     pg.mouse.set_visible(False)
 
     # container for sprites
     allsprites = pg.sprite.Group()
 
     img = pg.Surface((450, 300))
-    img.fill(SPRITE_COLOUR)
+    img.fill(sprite_colour)
 
     # We will toggle between these two texts using the sprite's
     # change_text method
@@ -70,7 +70,7 @@ def main():
         1,  # layer (don't care here)
         img,  # sprite image
         text1,  # text to be handwritten
-        colour=LINE_COLOUR,  # 'line' colour
+        colour=line_colour,  # 'line' colour
         pt_size=40,
         linewidth=2,
         cursor="pencil",
@@ -80,14 +80,14 @@ def main():
     paused = False
     hidden = False
     text = text1
-    x, y = WIDTH // 2, HEIGHT // 2 # centre pos of sprite
+    x, y = width // 2, height // 2 # centre pos of sprite
 
     # Main Game Loop
     while running:
         # instead of usual
         # dt = clock.tick()(FPS)
         # do following
-        dt = ph.HandWriterSprite.tick(FPS)
+        dt = ph.HandWriterSprite.tick(fps)
 
         # Check for user events
         events = pg.event.get()
@@ -103,11 +103,11 @@ def main():
 
                 if e.key == pg.K_f:
                     # write (F)aster
-                    hw_sprite.change_speed(SPEED_CHANGE_FACTOR)
+                    hw_sprite.change_speed(speed_change_factor)
 
                 if e.key == pg.K_s:
                     # write (S)lower
-                    hw_sprite.change_speed(1 / SPEED_CHANGE_FACTOR)
+                    hw_sprite.change_speed(1 / speed_change_factor)
 
                 if e.key == pg.K_r:
                     # (R)eset writing
@@ -138,17 +138,17 @@ def main():
         # Move sprite with arrow keys
         # 8-way movement, but diagonal speed not corrected
         keys = pg.key.get_pressed()
-        x += (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * SPEED
-        y += (keys[pg.K_DOWN] - keys[pg.K_UP]) * SPEED
+        x += (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * speed
+        y += (keys[pg.K_DOWN] - keys[pg.K_UP]) * speed
 
         # Update
         allsprites.update(dt)
 
         # Crude screen wrap
-        hw_sprite.rect.center = x % WIDTH, y % HEIGHT
+        hw_sprite.rect.center = x % width, y % height
 
         # Draw
-        screen.fill(SCREEN_COLOUR)
+        screen.fill(screen_colour)
         allsprites.draw(screen)
         pg.display.flip()
 
