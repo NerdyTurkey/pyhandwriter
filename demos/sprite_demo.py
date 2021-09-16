@@ -13,6 +13,7 @@ import sys
 
 sys.path.insert(0, str(path))
 from itertools import cycle
+from random import shuffle
 import pygame as pg
 import pyhandwriter as ph
 from sprites import Player, NPC, Rain
@@ -66,8 +67,9 @@ def main():
     bubble_player_layer = 15
     bubble_player_size = 450, 350
 
+    
     bubble_player_texts = cycle(
-        [
+            [
             "Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most excellent fancy.",
             "He hath borne me on his back a thousand times",
             "and now, how abhorred in my imagination it is! My gorge rises at it.",
@@ -79,9 +81,8 @@ def main():
             "...to this favor she must come. Make her laugh at that .",
         ]
     )
-
-    bubble_cat_texts = cycle(
-        [
+    
+    bubble_cat_texts = [
             "Shakespeare is not my bag baby",
             "He is scaring off all the mice",
             "How do I get off this screen ?",
@@ -93,7 +94,10 @@ def main():
             "This is a bit fishy",
             "What a total numb skull",
         ]
-    )
+    
+    shuffle(bubble_cat_texts)
+    bubble_cat_texts = cycle(bubble_cat_texts)
+    
     bubble_cat_layer = 25
     bubble_cat_size = 350, 200
     pause_duration = 2000  # millisec
@@ -156,7 +160,7 @@ def main():
         text_rect=(40, 50, 400, 290),  # rel to surf
         colour=(0, 0, 0),
         pt_size=24,
-        speed_mult=1,
+        speed_mult=5, # 2 for OBS, 1 otherwise
         cursor="quill_dark",
         nib={"width": 2, "angle": 45},
     )
@@ -178,7 +182,7 @@ def main():
         text_rect=(25, 5, 320, 170),  # rel to surf
         colour=(255, 255, 255),
         pt_size=36,
-        speed_mult=1.5,
+        speed_mult=5, # 4 for OBS, 1.5 otherwise
         cursor=fish_bones_img,
         cursor_sf=0.2,
     )

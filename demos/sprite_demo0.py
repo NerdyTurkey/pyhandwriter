@@ -85,7 +85,7 @@ def main():
     # Main Game Loop
     while running:
         # instead of usual
-        # dt = clock.tick()(FPS)
+        # dt = clock.tick(FPS)
         # do following
         dt = ph.HandWriterSprite.tick(fps)
 
